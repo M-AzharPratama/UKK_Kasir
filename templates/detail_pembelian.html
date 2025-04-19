@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome Icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">KasirApp</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"
+                href="{{ url_for('dashboard') }}"
+                >Dashboard</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'produk_list' %}active{% endif %}"
+                href="{{ url_for('produk_list') }}"
+                >Produk</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'lihat_pembelian' %}active{% endif %}"
+                href="{{ url_for('lihat_pembelian') }}"
+                >Pembelian</a
+              >
+            </li>
+            {% if session['role'] == 'admin' %}
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.endpoint == 'list_users' %}active{% endif %}"
+                href="{{ url_for('list_users') }}"
+                >User</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+        <!-- Profile Icon with Dropdown -->
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="profileDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fas fa-user"></i>
+            <!-- Profile Icon -->
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="profileDropdown"
+          >
+            <li>
+              <a class="dropdown-item" href="{{ url_for('profile') }}"
+                >Profile</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container">
+      <h2 class="mb-4">Detail Pembelian</h2>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p>
+            <strong>Code:</strong>
+            <span class="text-success fw-bold"
+              >{{ pembelian.nomor_pembayaran }}</span
+            >
+          </p>
+          <p><strong>Nama Pelanggan:</strong> {{ pembelian.nama_pelanggan }}</p>
+          <p><strong>Status Member:</strong> {{ pembelian.member_status }}</p>
+          <p><strong>No HP:</strong> {{ pembelian.no_hp }}</p>
+          <p><strong>Member Sejak:</strong> {{ pembelian.join_date }}</p>
+          <p>
+            <strong>Bayar:</strong>
+            <span class="text-success fw-bold"
+              >Rp{{ pembelian.total_bayar }}</span
+            >
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p>
+            <strong>Tanggal Pembelian:</strong> {{ pembelian.tgl_pembelian }}
+          </p>
+          <p>
+            <strong>Point Yang Digunakan:</strong>
+            <span class="text-success fw-bold">Rp{{ pembelian.diskon }}</span>
+          </p>
+          <p>
+            <strong>Total:</strong>
+            <span class="text-success fw-bold">Rp{{ pembelian.total }}</span>
+          </p>
+          <p>
+            <strong>Kembalian:</strong>
+            <span class="text-success fw-bold"
+              >Rp{{ pembelian.kembalian }}</span
+            >
+          </p>
+          <p>
+            <strong>Sisa Point:</strong>
+            <span class="text-success fw-bold"
+              >Rp{{ pembelian.sisa_point }}</span
+            >
+          </p>
+          <p>
+            <strong>Reward Point Didapatkan:</strong> {{ reward_point | round(2)
+            }}
+          </p>
+          <p><strong>Dibuat Oleh:</strong> {{ pembelian.role_pembuat }}</p>
+        </div>
+      </div>
+
+      <hr />
+      <h4 class="mb-3">Daftar Produk</h4>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Foto Produk</th>
+              <th>Nama Produk</th>
+              <th>Harga</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in list_produk %}
+            <tr>
+              <td>
+                {% if item.foto %}
+                <img
+                  src="{{ url_for('static', filename='uploads/' + item.foto) }}"
+                  alt="{{ item.nama_produk }}"
+                  width="80"
+                />
+                {% else %}
+                <span>Tidak ada foto</span>
+                {% endif %}
+              </td>
+              <td>{{ item.nama_produk }}</td>
+              <td>Rp{{ item.harga }}</td>
+              <td>{{ item.quantity }}</td>
+              <td class="fw-semibold">Rp{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <a href="{{ url_for('lihat_pembelian') }}" class="btn btn-secondary mt-3"
+        ><i class="fas fa-arrow-left"></i> Kembali ke daftar pembelian</a
+      >
+    </div>
+  </body>
+</html>

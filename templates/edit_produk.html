@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Produk</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">KasirApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+    
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'produk_list' %}active{% endif %}" href="{{ url_for('produk_list') }}">Produk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'lihat_pembelian' %}active{% endif %}" href="{{ url_for('lihat_pembelian') }}">Pembelian</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'list_users' %}active{% endif %}" href="{{ url_for('list_users') }}">User</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Profile Icon with Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user"></i> <!-- Profile Icon -->
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container">
+        <h2 class="mb-4">Edit Produk</h2>
+        <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
+            <div class="mb-3">
+                <label class="form-label">Nama Produk</label>
+                <input type="text" name="name" value="{{ products['name'] }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Harga</label>
+                <input type="text" name="price" value="{{ products['price'] }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Stok</label>
+                <input type="number" name="stock" value="{{ products['stock'] }}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Foto Produk</label><br>
+                {% if products['image'] %}
+                    <img src="{{ url_for('static', filename='uploads/' + products['image']) }}" alt="Foto Produk" width="120" class="mb-2"><br>
+                    <small class="text-muted">Foto saat ini</small><br>
+                {% endif %}
+                <input type="file" name="image" class="form-control mt-2">
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+                <a href="{{ url_for('produk_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

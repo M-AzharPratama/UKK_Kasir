@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Pembelian</title>
+    <style>
+    body { font-family: Arial, sans-serif; font-size: 12px; margin: 20px; }
+    h2, h4 { text-align: center; }
+    
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .col {
+        width: 48%;
+        box-sizing: border-box;
+    }
+
+    .info p { 
+        margin: 4px 0;
+    }
+
+    /* Memberikan jarak antar baris */
+    .row .col {
+        margin-bottom: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 6px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        max-width: 80px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        margin-top: 20px;
+    }
+
+    hr {
+        margin: 20px 0;
+        border: 1px solid #ddd;
+    }
+</style>
+
+</head>
+<body>
+
+    <h2>Detail Pembelian</h2>
+
+    <div class="row">
+        <div class="col info">
+            <p><strong>Code:</strong> {{ pembelian.nomor_pembayaran }}</p>
+            <p><strong>Nama Pelanggan:</strong> {{ pembelian.nama_pelanggan }}</p>
+            <p><strong>Status Member:</strong> {{ pembelian.member_status }}</p>
+            <p><strong>No HP:</strong> {{ pembelian.no_hp }}</p>
+            <p><strong>Member Sejak:</strong> {{ pembelian.join_date }}</p>
+            <p><strong>Bayar:</strong> Rp{{ pembelian.total_bayar }}</p>
+        </div>
+        <div class="col info">
+            <p><strong>Tanggal Pembelian:</strong> {{ pembelian.tgl_pembelian }}</p>
+            <p><strong>Point Yang Digunakan:</strong> Rp{{ pembelian.diskon }}</p>
+            <p><strong>Total:</strong> Rp{{ pembelian.total }}</p>
+            <p><strong>Kembalian:</strong> Rp{{ pembelian.kembalian }}</p>
+            <p><strong>Sisa Point:</strong> Rp{{ pembelian.sisa_point }}</p>
+            <p><strong>Reward Point Didapatkan:</strong> {{ reward_point | round(2) }}</p>
+            <p><strong>Dibuat Oleh:</strong> {{ pembelian.role_pembuat }}</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4 class="section-title">Daftar Produk</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Foto Produk</th>
+                <th>Nama Produk</th>
+                <th>Harga</th>
+                <th>Jumlah</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in list_produk %}
+            <tr>
+                <td>
+                    {% if item.foto_path_abs %}
+                        <img src="{{ item.foto_path_abs }}">
+                    {% else %}
+                        Tidak ada foto
+                    {% endif %}
+                </td>
+                <td>{{ item.nama_produk }}</td>
+                <td>Rp{{ item.harga }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>Rp{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
